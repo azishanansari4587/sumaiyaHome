@@ -1,0 +1,202 @@
+import connection from '@/lib/connection';
+import { NextResponse } from 'next/server';
+import cloudinary from '@/lib/cloudinary';
+
+// pages/api/products.js OR app/api/products/route.js (agar app router use kar raha h)
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb', // default 1mb hai
+    },
+  },
+};
+
+
+
+function generateSlug(name) {
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
+async function uploadToCloudinary(file, folder) {
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  const result = await new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+      { folder },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    ).end(buffer);
+  });
+
+  return result.secure_url;
+}
+
+export async function POST(req) {
+  try {
+    const formData = await req.formData();
+
+    // Simple fields
+    const name = formData.get("name");
+    const code = formData.get("code");
+    const isActive = formData.get("isActive") === "true";
+    const isFeatured = formData.get("isFeatured") === "true";
+    const short_description = formData.get("short_description");
+    const description = formData.get("description");
+    const inStock = formData.get("inStock") === "true";
+    const sku = formData.get("sku");
+    const badges = formData.get("badges");
+    // const addInfo = formData.get("addInfo");
+    const tags = JSON.parse(formData.get("tags") || "[]");
+    // const designers = JSON.parse(formData.get("designers") || "[]");
+    const sizes = JSON.parse(formData.get("sizes") || "[]");
+    const features = JSON.parse(formData.get("features") || "[]");
+    const specifications = JSON.parse(formData.get("specifications") || "[]");
+    const collectionId = formData.get("collectionId");
+
+    // const isOutlet = formData.get("isOutlet") === "true";
+    // const outletOldPrice = formData.get("outletOldPrice");
+    // const outletNewPrice = formData.get("outletNewPrice");
+    // const outletDiscount = formData.get("outletDiscount");
+    // const care = formData.get("care");
+    // const certification = formData.get("certification");
+
+    // ✅ Images & Colors are already Cloudinary URLs from frontend
+    const images = JSON.parse(formData.get("images") || "[]");
+    const colors = JSON.parse(formData.get("colors") || "[]");
+
+    // Generate slug
+    let slug = generateSlug(name);
+
+    // Check for existing name or slug
+    let uniqueSlug = slug;
+    let counter = 1;
+
+    while (true) {
+      const [existing] = await connection.execute(
+        `SELECT id FROM product WHERE name = ? OR slug = ? LIMIT 1`,
+        [name, uniqueSlug]
+      );
+      if (existing.length === 0) break; // Unique
+      uniqueSlug = `${slug}-${counter++}`;
+    }
+
+    slug = uniqueSlug;
+
+
+
+    // Save to DB
+    const [result] = await connection.execute(
+      `INSERT INTO product 
+      (name, code, slug, short_description, description, isActive, isFeatured, tags,  images, colors, sizes, features, specifications, inStock, sku, badges, collectionId) 
+      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        name,
+        code,
+        slug,
+        short_description,
+        description,
+        isActive ? 1 : 0,
+        isFeatured ? 1 : 0,
+        JSON.stringify(tags),
+        // JSON.stringify(designers),
+
+        JSON.stringify(images),   // ✅ Already URLs
+        JSON.stringify(colors),   // ✅ Each color already has images[] URLs
+
+        JSON.stringify(sizes),
+        JSON.stringify(features),
+        JSON.stringify(specifications),
+        inStock ? 1 : 0,
+        sku,
+        // care, 
+        // certification,
+        badges,
+        // addInfo,
+        collectionId,
+        // isOutlet ? 1 : 0,
+        // outletOldPrice,
+        // outletNewPrice,
+        // outletDiscount
+      ]
+    );
+
+    return NextResponse.json(
+      { message: "Product saved successfully!", id: result.insertId },
+      { status: 201 }
+    );
+
+  } catch (err) {
+    console.error("Product Save Error:", err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+
+
+// export async function GET(req) {
+//   try {
+//     const [rows] = await connection.execute("SELECT * FROM product ORDER BY id DESC");
+
+//     // Parse JSON fields (optional, depends how you want to return it)
+//     const products = rows.map((product) => ({
+//       ...product,
+//       images: JSON.parse(product.images || "[]"),
+//       colors: JSON.parse(product.colors || "[]"),
+//       sizes: JSON.parse(product.sizes || "[]"),
+//       features: JSON.parse(product.features || "[]"),
+//       specifications: JSON.parse(product.specifications || "[]"),
+//     }));
+
+//     return new Response(JSON.stringify(products), {
+//       status: 200,
+//       headers: { "Content-Type": "application/json" },
+//     });
+
+//   } catch (error) {
+//     console.error("GET product error:", error);
+//     return new Response(JSON.stringify({ error: "Failed to fetch products" }), {
+//       status: 500,
+//     });
+//   }
+// }
+
+export async function GET(req) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const showAll = searchParams.get("all") === "true";
+
+    const query = `SELECT 
+        p.*, 
+        c.name AS collectionName
+      FROM 
+        product p
+      JOIN 
+        collection c ON p.collectionId = c.id
+      ${showAll ? "" : "WHERE p.isActive = 1"}
+      ORDER BY 
+        p.id DESC`;
+
+    const [rows] = await connection.execute(query);
+
+    // ✅ Parse images JSON string
+    const products = rows.map(product => ({
+      ...product,
+      images: JSON.parse(product.images || "[]"),
+      colors: JSON.parse(product.colors || "[]"),
+      sizes: JSON.parse(product.sizes || "[]"),
+    }));
+
+    return NextResponse.json({ products });
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return NextResponse.json({ error: "Failed to load products" }, { status: 500 });
+  }
+}
+
