@@ -202,7 +202,7 @@ const Users = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete user "{userToDelete?.name}" and remove their data from our servers.
+              This action cannot be undone. This will permanently delete user &quot;{userToDelete?.name}&quot; and remove their data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
