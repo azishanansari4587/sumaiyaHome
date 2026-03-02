@@ -52,7 +52,7 @@ const FeaturedCollections = () => {
         {collections.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {collections.map((collection) => (
-              <div key={collection.id} className="group relative overflow-hidden rounded-lg aspect-[4/5] bg-white">
+              <Link href={`/collection/${collection.slug}`} key={collection.id} className="group relative block overflow-hidden rounded-lg aspect-[4/5] bg-white">
                 <Image
                   src={collection.image}
                   alt={collection.name}
@@ -62,11 +62,8 @@ const FeaturedCollections = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6 text-white">
                   <h3 className="text-2xl font-serif font-medium mb-2">{collection.name}</h3>
                   {/* <p className="mb-4 opacity-90">{collection.description}</p> */}
-                  <Button variant="outline" className="w-full border-white text-black hover:bg-white/20" asChild>
-                    <Link href={`/collection/${collection.slug}`}>Explore Collection</Link>
-                  </Button>
                 </div>
-              </div>
+              </Link>
             ))
             }
           </div>

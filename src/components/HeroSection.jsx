@@ -80,7 +80,7 @@ const HeroSection = () => {
     )
 
   return (
-    <section className="relative h-[60vh] sm:h-[75vh] md:h-screen w-full overflow-hidden">
+    <section className="relative h-[60vh] sm:h-[75vh] md:h-screen w-full overflow-hidden bg-gray-50 flex items-center justify-center">
       <Carousel
         ref={carouselRef}
         loop
@@ -88,19 +88,17 @@ const HeroSection = () => {
         plugins={[autoplay.current]}
         className="w-full h-full relative"
       >
-        <CarouselContent className="w-full h-full relative">
+        <CarouselContent className="w-full h-full flex -ml-0 mt-0">
           {slides.map((slide, index) => (
             <CarouselItem
               key={index}
-              className="w-full relative h-[60vh] sm:h-[75vh] md:h-screen"
+              className="w-full h-full relative pl-0"
             >
-              <div className="relative w-full h-full">
-                <Image
+              <div className="relative w-full h-[60vh] sm:h-[75vh] md:h-screen">
+                <img
                   src={slide.imageUrl}
                   alt={`Slide ${index}`}
-                  fill
-                  className="object-cover object-center"
-                  sizes="100vw"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
                 />
               </div>
             </CarouselItem>

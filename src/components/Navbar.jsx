@@ -56,26 +56,26 @@ const Navbar = () => {
   const cart = useCartStore((state) => state.cart)
 
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]); // empty array, undefined nahi
-  const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState([]);
+  const [showSearch, setShowSearch] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = async (e) => {
-    const value = e.target.value;
+  const handleSearch = async (value) => {
     setQuery(value);
-
     if (value.trim() === "") {
       setResults([]);
-      setShowResults(false);
       return;
     }
 
+    setIsSearching(true);
     try {
-      const res = await fetch(`/api/products/search?q=${value}`);
+      const res = await fetch(`/api/search?q=${value}`);
       const data = await res.json();
-      setResults(data.products);
-      setShowResults(true);
+      setResults(data.results || []);
     } catch (error) {
       console.error("Search error:", error);
+    } finally {
+      setIsSearching(false);
     }
   };
 
@@ -103,26 +103,67 @@ const Navbar = () => {
 
           {/* Desktop Icons */}
           <div className="hidden md:flex items-center space-x-2">
-            {/* <Button variant="ghost" size="icon">
-              <Search size={20} />
-            </Button> */}
-
-
-            {/* <div className="relative">
-              <Search onClick={() => setShowSearch(!showSearch)} className="cursor-pointer" />
+            {/* Search Dropdown */}
+            <div className="relative">
+              <Button variant="ghost" size="icon" onClick={() => setShowSearch(!showSearch)}>
+                <Search size={20} className="text-gray-600" />
+              </Button>
               {showSearch && (
-                <form onSubmit={handleSearch} className="absolute top-10 right-0 bg-white shadow p-2 rounded">
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="border px-2 py-1 rounded"
-                  />
-                  <button type="submit" className="ml-2 bg-blue-500 text-white px-2 py-1 rounded">Search</button>
-                </form>
+                <div className="absolute top-[120%] right-0 w-[300px] md:w-[400px] bg-white border border-gray-200 shadow-xl rounded-lg overflow-hidden z-50">
+                  <div className="p-2 border-b">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        autoFocus
+                        type="text"
+                        value={query}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        placeholder="Search for rugs, decor..."
+                        className="w-full pl-9 pr-4 py-2 border-none focus:ring-0 text-sm bg-gray-50 rounded-md outline-none"
+                      />
+                      {query && (
+                        <button onClick={() => { setQuery(""); setResults([]); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {query && (
+                    <div className="max-h-[400px] overflow-y-auto w-full bg-white">
+                      {isSearching ? (
+                        <div className="p-4 text-center text-sm text-gray-500">Searching...</div>
+                      ) : results.length > 0 ? (
+                        <div className="flex flex-col">
+                          {results.map((product) => {
+                            const images = JSON.parse(product.images || "[]");
+                            const imageSrc = images.length > 0 ? images[0] : "/placeholder.jpg";
+                            return (
+                              <Link
+                                href={`/product/${product.slug}`}
+                                key={product.id}
+                                onClick={() => { setShowSearch(false); setQuery(''); setResults([]); }}
+                                className="flex items-center gap-3 p-3 hover:bg-gray-50 border-b border-gray-50 last:border-none transition-colors"
+                              >
+                                <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 relative">
+                                  <Image src={imageSrc} alt={product.name} fill className="object-cover" />
+                                </div>
+                                <div className="flex flex-col flex-1 overflow-hidden">
+                                  <span className="text-sm font-medium text-gray-900 truncate">{product.name}</span>
+                                  <span className="text-xs text-gray-500 truncate">{product.code}</span>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="p-4 text-center text-sm text-gray-500">No products found for "{query}"</div>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
-            </div> */}
+            </div>
 
             {/* <Button variant="ghost" size="icon" asChild>
               <Link href="/wishlist">
