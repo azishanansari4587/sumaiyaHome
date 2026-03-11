@@ -1,5 +1,6 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import ShopHeader from "@/components/ShopHeader";
 import ProductGrid from "@/components/ProductGrid";
 import FilterSidebar from "@/components/FilterSidebar";
@@ -9,7 +10,9 @@ import ProductFilter from "@/components/ProductFilter";
 import Spinner from "@/components/Spinner";
 
 
-const Decor = () => {
+const DecorContent = () => {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams?.get('category');
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,7 @@ const Decor = () => {
 
         const products = data?.products || [];
 
-        const filtered = products
+          const filtered = products
           .filter((product) => {
             let tags = [];
 
@@ -36,7 +39,15 @@ const Decor = () => {
             }
 
             const decorTags = ["cushion", "pillows", "pouff", "throws"];
-            return tags.some(tag => typeof tag === 'string' && decorTags.includes(tag.toLowerCase()));
+            const isDecor = tags.some(tag => typeof tag === 'string' && decorTags.includes(tag.toLowerCase()) || tag.toLowerCase() === "decor");
+            
+            if (!isDecor) return false;
+
+            if (categoryParam) {
+              return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === categoryParam.toLowerCase());
+            }
+
+            return true;
           });
 
         setProducts(filtered);
@@ -48,7 +59,7 @@ const Decor = () => {
     };
 
     fetchBestSellers();
-  }, []);
+  }, [categoryParam]);
 
 
 
@@ -322,7 +333,13 @@ const Decor = () => {
   );
 };
 
-export default Decor;
+export default function Decor() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <DecorContent />
+    </Suspense>
+  );
+}
 
 
 

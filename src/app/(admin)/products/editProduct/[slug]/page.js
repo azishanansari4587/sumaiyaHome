@@ -47,7 +47,7 @@ const EditProduct = () => {
 
   const [product, setProduct] = useState(initialProductState);
 
-  const availableTags = ["Rugs", "Remnant", "OutDoor", "New Arrival", "Cushion", "Throws", "Pillows", "Pouff"];
+  const availableTags = ["All Rugs", "Natural", "Machine Made", "Novelty", "Casa Resedential", "Casa Commercial", "Casa Room Size", "Pinnacle", "Tropical", "Beachbum", "New Arrival", "Cushion", "Throws", "Pillows", "Poufs"];
   const availableBadges = [
     { id: "new", name: "New" },
     { id: "top_sell", name: "Top Sell" },

@@ -1,5 +1,6 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import ShopHeader from "@/components/ShopHeader";
 import ProductGrid from "@/components/ProductGrid";
 import FilterSidebar from "@/components/FilterSidebar";
@@ -9,7 +10,9 @@ import ProductFilter from "@/components/ProductFilter";
 import Spinner from "@/components/Spinner";
 
 
-const Outdoor = () => {
+const OutdoorContent = () => {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams?.get('category');
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +38,14 @@ const Outdoor = () => {
               console.error("Tag parsing error:", e);
             }
 
-            return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "outdoor");
+            const isOutdoor = tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "outdoor");
+            if (!isOutdoor) return false;
+
+            if (categoryParam) {
+              return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === categoryParam.toLowerCase());
+            }
+
+            return true;
           });
 
         setProducts(filtered);
@@ -47,7 +57,7 @@ const Outdoor = () => {
     };
 
     fetchBestSellers();
-  }, []);
+  }, [categoryParam]);
 
 
 
@@ -321,4 +331,10 @@ const Outdoor = () => {
   );
 };
 
-export default Outdoor;
+export default function Outdoor() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <OutdoorContent />
+    </Suspense>
+  );
+}

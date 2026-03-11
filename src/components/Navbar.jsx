@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { Search, ShoppingCart, Menu, X, Heart, User, LayoutDashboard, UserCircle, LogOut, Package } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, Heart, User, LayoutDashboard, UserCircle, LogOut, Package, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { usePathname, useRouter } from "next/navigation";
@@ -90,11 +90,60 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            <Link href="/rugs" className="text-foreground hover:text-primary text-gray-600 font-normal">Rugs</Link>
-            <Link href="/remnant" className="text-foreground hover:text-primary text-gray-600 font-normal">Remnant</Link>
-            <Link href="/decor" className="text-foreground hover:text-primary text-gray-600 font-normal">Decor</Link>
-            <Link href="/outdoor" className="text-foreground hover:text-primary text-gray-600 font-normal">Outdoor</Link>
+          <nav className="hidden md:flex space-x-8 items-center">
+            <div className="relative group">
+              <Link href="/rugs?category=All Rugs" className="flex items-center gap-1 text-foreground hover:text-primary text-gray-600 font-normal">
+                Rugs <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+              </Link>
+              <div className="absolute top-full left-0 pt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-white rounded-md shadow-lg border border-gray-100 p-2 flex flex-col gap-1">
+                  <Link href="/rugs?category=All Rugs" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">All Rugs</Link>
+                  <Link href="/rugs?category=Natural" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Natural</Link>
+                  <Link href="/rugs?category=Machine Made" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Machine Made</Link>
+                  <Link href="/rugs?category=Novality" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Novality</Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative group">
+              <Link href="/remnant?category=Casa Residential" className="flex items-center gap-1 text-foreground hover:text-primary text-gray-600 font-normal">
+                Remnant <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+              </Link>
+              <div className="absolute top-full left-0 pt-4 w-52 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-white rounded-md shadow-lg border border-gray-100 p-2 flex flex-col gap-1">
+                  <Link href="/remnant?category=Casa Residential" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Residential</Link>
+                  <Link href="/remnant?category=Casa Room Size" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Room Size</Link>
+                  <Link href="/remnant?category=Casa Commercial" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Commercial</Link>
+                  <Link href="/remnant?category=Pinacal" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Pinacal</Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative group">
+              <Link href="/decor?category=Poufs" className="flex items-center gap-1 text-foreground hover:text-primary text-gray-600 font-normal">
+                Decor <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+              </Link>
+              <div className="absolute top-full left-0 pt-4 w-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-white rounded-md shadow-lg border border-gray-100 p-2 flex flex-col gap-1">
+                  <Link href="/decor?category=Poufs" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Pouf</Link>
+                  <Link href="/decor?category=Pillows" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Pillow</Link>
+                  <Link href="/decor?category=Throws" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Throw</Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative group">
+              <Link href="/outdoor?category=Tropical" className="flex items-center gap-1 text-foreground hover:text-primary text-gray-600 font-normal">
+                Outdoor <ChevronDown size={14} className="transition-transform group-hover:rotate-180" />
+              </Link>
+              <div className="absolute top-full left-0 pt-4 w-40 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="bg-white rounded-md shadow-lg border border-gray-100 p-2 flex flex-col gap-1">
+                  <Link href="/outdoor?category=Tropical" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Tropical</Link>
+                  <Link href="/outdoor?category=Beachbum" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Beachbum</Link>
+                </div>
+              </div>
+            </div>
+
             <Link href="/about" className="text-foreground hover:text-primary text-gray-600 font-normal">About Us</Link>
             {/* <Link href="/contact" className="text-foreground hover:text-primary font-medium">Contact</Link>
             <Link href="/customize" className="text-foreground hover:text-primary font-medium">Customize</Link> */}
@@ -245,12 +294,53 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
-            <nav className="flex flex-col space-y-4">
-              <Link href="/rugs" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">Rugs</Link>
-              <Link href="/remnant" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">Remnant</Link>
-              <Link href="/decor" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">Decor</Link>
-              <Link href="/outdoor" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">Outdoor</Link>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">About Us</Link>
+            <nav className="flex flex-col space-y-4 px-2">
+              <details className="group">
+                <summary className="flex items-center justify-between text-foreground hover:text-primary text-gray-600 font-normal cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  Rugs <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
+                  <Link href="/rugs" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">All Rugs</Link>
+                  <Link href="/rugs?category=Natural" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Natural</Link>
+                  <Link href="/rugs?category=Machine Made" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Machine Made</Link>
+                  <Link href="/rugs?category=Novality" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Novality</Link>
+                </div>
+              </details>
+
+              <details className="group">
+                <summary className="flex items-center justify-between text-foreground hover:text-primary text-gray-600 font-normal cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  Remnant <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
+                  <Link href="/remnant?category=Casa Residential" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Residential</Link>
+                  <Link href="/remnant?category=Casa Room Size" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Room Size</Link>
+                  <Link href="/remnant?category=Casa Commercial" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Commercial</Link>
+                  <Link href="/remnant?category=Pinacal" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pinacal</Link>
+                </div>
+              </details>
+
+              <details className="group">
+                <summary className="flex items-center justify-between text-foreground hover:text-primary text-gray-600 font-normal cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  Decor <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
+                  <Link href="/decor?category=Pouf" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pouf</Link>
+                  <Link href="/decor?category=Pillow" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pillow</Link>
+                  <Link href="/decor?category=Throw" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Throw</Link>
+                </div>
+              </details>
+
+              <details className="group">
+                <summary className="flex items-center justify-between text-foreground hover:text-primary text-gray-600 font-normal cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  Outdoor <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
+                </summary>
+                <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
+                  <Link href="/outdoor?category=Tropical" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Tropical</Link>
+                  <Link href="/outdoor?category=Beachbum" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Beachbum</Link>
+                </div>
+              </details>
+
+              <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal pt-1">About Us</Link>
               <Link href="/partner" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">Open a Trade Account</Link>
             </nav>
             <div className="flex items-center space-x-4 mt-4 pt-4 border-t border-border">

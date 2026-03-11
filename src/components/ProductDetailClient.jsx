@@ -36,7 +36,7 @@ export default function ProductDetailClient({ slug }) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
 
@@ -57,8 +57,8 @@ export default function ProductDetailClient({ slug }) {
   const increaseQuantity = () => setQuantity(prev => prev + 1);
   const decreaseQuantity = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
-  const handleColorChange = (colorName) => {
-    setSelectedColor(colorName);
+  const handleColorChange = (index) => {
+    setSelectedColorIndex(index);
     setSelectedImage(0);
   };
 
@@ -70,7 +70,7 @@ export default function ProductDetailClient({ slug }) {
       return;
     }
 
-    const currentColorObj = product?.colors?.find(c => c.name === selectedColor) || product?.colors?.[0] || null;
+    const currentColorObj = product?.colors?.[selectedColorIndex] || product?.colors?.[0] || null;
     const currentImages = currentColorObj?.images ?? [];
 
     const cartItem = {
@@ -118,7 +118,7 @@ export default function ProductDetailClient({ slug }) {
               Quantity: {quantity},
             </p>
             <p className='text-sm text-gray-700'> Size: {selectedSize},</p>
-            <p className='text-sm text-gray-700'>Color: {selectedColor}</p>
+            <p className='text-sm text-gray-700'>Color: {currentColorObj?.name}</p>
             <button
               onClick={() => router.push("/cart")}
               className="mt-1 text-xs px-3 py-1 bg-black text-white rounded"
@@ -187,9 +187,9 @@ export default function ProductDetailClient({ slug }) {
         if (res.ok) {
           setProduct(data);
 
-          const validColor = data.colors.find(c => c.name.toLowerCase() === initialColor?.toLowerCase());
+          const validColorIndex = data.colors.findIndex(c => c.name.toLowerCase() === initialColor?.toLowerCase());
 
-          setSelectedColor(validColor ? validColor.name : data.colors[0]?.name);
+          setSelectedColorIndex(validColorIndex !== -1 ? validColorIndex : 0);
           // setSelectedColor(data.colors[0]?.name);
           setSelectedSize(data.sizes[0]?.value || data.sizes[0]);
         } else {
@@ -208,7 +208,7 @@ export default function ProductDetailClient({ slug }) {
   if (loading || !product) return <Spinner />;
 
   // const currentColorObj = product?.colors?.find(c => c.name === selectedColor) || product?.colors?.[0] || null;
-  const currentColorObj = product?.colors?.find(c => c.name === selectedColor) || product?.colors?.[0];
+  const currentColorObj = product?.colors?.[selectedColorIndex] || product?.colors?.[0];
   const currentImages = currentColorObj?.images ?? [];
 
 
@@ -314,21 +314,21 @@ export default function ProductDetailClient({ slug }) {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              {product.colors.map(color => (
-                <button key={color.name} onClick={() => color.inStock && handleColorChange(color.name)}
+              {product.colors.map((color, index) => (
+                <button key={index} onClick={() => color.inStock && handleColorChange(index)}
                   disabled={!color.inStock}
                   title={color.name}
                   aria-label={`Select color: ${color.name}`}
                   className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden transition-all duration-200
                     ${!color.inStock ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:scale-110'}
-                    ${selectedColor === color.name ? 'ring-4 ring-primary ring-offset-2 scale-110 shadow-lg' : 'ring-2 ring-border hover:ring-primary/50'}`}>
+                    ${selectedColorIndex === index ? 'ring-4 ring-primary ring-offset-2 scale-110 shadow-lg' : 'ring-2 ring-border hover:ring-primary/50'}`}>
                   {/* <Image src={`${color.images?.[0]}?height=100&width=100`} alt={color.name} fill className="object-cover w-full h-full rounded-full" /> */}
                   <img
                     src={color.images?.[0]}
                     alt={color.name}
                     className="object-contain w-full h-full rounded-full"
                   />
-                  {selectedColor === color.name && <Check size={20} className="absolute inset-0 m-auto text-white drop-shadow-lg" />}
+                  {selectedColorIndex === index && <Check size={20} className="absolute inset-0 m-auto text-white drop-shadow-lg" />}
                   {!color.inStock && <div className="absolute inset-0 bg-gray-400/50 rounded-full flex items-center justify-center">
                     <div className="w-6 h-0.5 bg-red-500 rotate-45"></div>
                   </div>}

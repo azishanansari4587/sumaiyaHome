@@ -1,5 +1,6 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import ShopHeader from "@/components/ShopHeader";
 import ProductGrid from "@/components/ProductGrid";
 import FilterSidebar from "@/components/FilterSidebar";
@@ -9,7 +10,9 @@ import ProductFilter from "@/components/ProductFilter";
 import Spinner from "@/components/Spinner";
 
 
-const Shop = () => {
+const ShopContent = () => {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams?.get('category');
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,7 @@ const Shop = () => {
 
         const products = data?.products || [];
 
-        const filtered = products
+          const filtered = products
           .filter((product) => {
             let tags = [];
 
@@ -35,7 +38,17 @@ const Shop = () => {
               console.error("Tag parsing error:", e);
             }
 
-            return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "rugs");
+            const isRug = tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "rugs");
+            if (!isRug) return false;
+
+            if (categoryParam) {
+              const checkParam = categoryParam.toLowerCase() === "all rugs" ? "rugs" : categoryParam.toLowerCase();
+              if (checkParam !== "rugs") {
+                 return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === checkParam);
+              }
+            }
+
+            return true;
           });
 
         setProducts(filtered);
@@ -47,7 +60,7 @@ const Shop = () => {
     };
 
     fetchBestSellers();
-  }, []);
+  }, [categoryParam]);
 
 
 
@@ -313,4 +326,10 @@ const Shop = () => {
   );
 };
 
-export default Shop;
+export default function Shop() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <ShopContent />
+    </Suspense>
+  );
+}

@@ -1,5 +1,6 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import ShopHeader from "@/components/ShopHeader";
 import ProductGrid from "@/components/ProductGrid";
 import FilterSidebar from "@/components/FilterSidebar";
@@ -9,7 +10,9 @@ import ProductFilter from "@/components/ProductFilter";
 import Spinner from "@/components/Spinner";
 
 
-const Remnant = () => {
+const RemnantContent = () => {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams?.get('category');
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +46,14 @@ const Remnant = () => {
             console.error("Designer parsing error:", e);
           }
 
-          return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "remnant");
+          const isRemnant = tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "remnant");
+          if (!isRemnant) return false;
+
+          if (categoryParam) {
+            return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === categoryParam.toLowerCase());
+          }
+
+          return true;
         }).map(product => ({
           ...product,
           designers: Array.isArray(product.designers)
@@ -60,7 +70,7 @@ const Remnant = () => {
     };
 
     fetchBestSellers();
-  }, []);
+  }, [categoryParam]);
 
 
 
@@ -334,7 +344,13 @@ const Remnant = () => {
   );
 };
 
-export default Remnant;
+export default function Remnant() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <RemnantContent />
+    </Suspense>
+  );
+}
 
 
 
