@@ -38,14 +38,27 @@ const ShopContent = () => {
               console.error("Tag parsing error:", e);
             }
 
-            const isRug = tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "rugs");
+            const rugTags = ["all rugs", "natural", "machine made", "novelty", "novality", "rugs", "rug"];
+            const isRug = tags.some(tag => {
+                if(typeof tag === 'string') {
+                    const t = tag.toLowerCase().trim();
+                    return rugTags.includes(t) || t.includes("rug");
+                }
+                return false;
+            });
             if (!isRug) return false;
 
             if (categoryParam) {
-              const checkParam = categoryParam.toLowerCase() === "all rugs" ? "rugs" : categoryParam.toLowerCase();
-              if (checkParam !== "rugs") {
-                 return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === checkParam);
-              }
+              const param = categoryParam.toLowerCase().trim();
+
+              return tags.some(tag => {
+                 if (typeof tag !== 'string') return false;
+                 const t = tag.toLowerCase().trim();
+                 return t === param || 
+                        t.replace(/s$/, '') === param.replace(/s$/, '') || 
+                        t.replace(/-/g, ' ') === param.replace(/-/g, ' ') ||
+                        (t === 'novelty' && param === 'novality');
+              });
             }
 
             return true;

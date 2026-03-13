@@ -46,11 +46,25 @@ const RemnantContent = () => {
             console.error("Designer parsing error:", e);
           }
 
-          const isRemnant = tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "remnant");
+          const remnantTags = ["remnant", "casa residential", "casa resedential", "casa room size", "casa commercial", "pinnacle", "pinacal"];
+          const isRemnant = tags.some(tag => {
+              if(typeof tag === 'string') {
+                  const t = tag.toLowerCase().trim();
+                  return remnantTags.includes(t) || t.includes("remnant");
+              }
+              return false;
+          });
           if (!isRemnant) return false;
 
           if (categoryParam) {
-            return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === categoryParam.toLowerCase());
+            const param = categoryParam.toLowerCase().trim();
+            return tags.some(tag => {
+              if (typeof tag !== 'string') return false;
+              const t = tag.toLowerCase().trim();
+              return t === param || 
+                     t.replace(/s$/, '') === param.replace(/s$/, '') || 
+                     t.replace(/-/g, ' ') === param.replace(/-/g, ' ');
+            });
           }
 
           return true;
@@ -220,8 +234,7 @@ const RemnantContent = () => {
           <div className="container mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold mb-4">Shop Our Remnant</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover our handcrafted collection of premium rugs, made with sustainable materials
-              and traditional techniques. Find the perfect piece for your space.
+              A remnant area rug is essentially a rug made from leftover carpet or flooring material that’s been cut to a usable size and finished so it functions like a regular rug.
             </p>
           </div>
         </div>

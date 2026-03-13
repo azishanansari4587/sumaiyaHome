@@ -38,11 +38,25 @@ const OutdoorContent = () => {
               console.error("Tag parsing error:", e);
             }
 
-            const isOutdoor = tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === "outdoor");
+            const outdoorTags = ["outdoor", "tropical", "beachbum", "beach bum"];
+            const isOutdoor = tags.some(tag => {
+                if(typeof tag === 'string') {
+                    const t = tag.toLowerCase().trim();
+                    return outdoorTags.includes(t) || t.includes("outdoor");
+                }
+                return false;
+            });
             if (!isOutdoor) return false;
 
             if (categoryParam) {
-              return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === categoryParam.toLowerCase());
+              const param = categoryParam.toLowerCase().trim();
+              return tags.some(tag => {
+                if (typeof tag !== 'string') return false;
+                const t = tag.toLowerCase().trim();
+                return t === param || 
+                       t.replace(/s$/, '') === param.replace(/s$/, '') ||
+                       t.replace(/-/g, ' ') === param.replace(/-/g, ' ');
+              });
             }
 
             return true;
@@ -207,8 +221,7 @@ const OutdoorContent = () => {
           <div className="container mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold mb-4">Shop Our Outdoor Rugs</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover our handcrafted collection of premium rugs, made with sustainable materials
-              and traditional techniques. Find the perfect piece for your space.
+              Bring the beach to your backyard. Designed for the ultimate beach bum, our outdoor decor gives your space a fresh, tropical feel.
             </p>
           </div>
         </div>

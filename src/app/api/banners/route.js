@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { imageUrl } = body;
+    const { imageUrl, name } = body;
 
     if (!imageUrl) {
       return NextResponse.json(
@@ -15,9 +15,16 @@ export async function POST(req) {
       );
     }
 
+    // Ensure name column exists (safe to run every time)
+    try {
+      await connection.execute(
+        "ALTER TABLE banners ADD COLUMN IF NOT EXISTS name VARCHAR(255) NULL"
+      );
+    } catch (_) {}
+
     const [result] = await connection.execute(
-      "INSERT INTO banners (imageUrl) VALUES (?)",
-      [imageUrl]
+      "INSERT INTO banners (imageUrl, name) VALUES (?, ?)",
+      [imageUrl, name || null]
     );
 
     return NextResponse.json(

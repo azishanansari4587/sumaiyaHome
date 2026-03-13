@@ -100,7 +100,7 @@ const Navbar = () => {
                   <Link href="/rugs?category=All Rugs" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">All Rugs</Link>
                   <Link href="/rugs?category=Natural" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Natural</Link>
                   <Link href="/rugs?category=Machine Made" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Machine Made</Link>
-                  <Link href="/rugs?category=Novality" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Novality</Link>
+                  <Link href="/rugs?category=Novelty" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Novelty</Link>
                 </div>
               </div>
             </div>
@@ -111,10 +111,10 @@ const Navbar = () => {
               </Link>
               <div className="absolute top-full left-0 pt-4 w-52 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                 <div className="bg-white rounded-md shadow-lg border border-gray-100 p-2 flex flex-col gap-1">
-                  <Link href="/remnant?category=Casa Residential" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Residential</Link>
+                  <Link href="/remnant?category=Casa Resedential" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Resedential</Link>
                   <Link href="/remnant?category=Casa Room Size" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Room Size</Link>
                   <Link href="/remnant?category=Casa Commercial" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Casa Commercial</Link>
-                  <Link href="/remnant?category=Pinacal" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Pinacal</Link>
+                  <Link href="/remnant?category=Pinnacle" className="px-3 py-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Pinnacle</Link>
                 </div>
               </div>
             </div>
@@ -300,10 +300,10 @@ const Navbar = () => {
                   Rugs <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
                 </summary>
                 <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
-                  <Link href="/rugs" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">All Rugs</Link>
+                  <Link href="/rugs?category=All Rugs" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">All Rugs</Link>
                   <Link href="/rugs?category=Natural" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Natural</Link>
                   <Link href="/rugs?category=Machine Made" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Machine Made</Link>
-                  <Link href="/rugs?category=Novality" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Novality</Link>
+                  <Link href="/rugs?category=Novelty" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Novelty</Link>
                 </div>
               </details>
 
@@ -312,10 +312,10 @@ const Navbar = () => {
                   Remnant <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
                 </summary>
                 <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
-                  <Link href="/remnant?category=Casa Residential" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Residential</Link>
+                  <Link href="/remnant?category=Casa Resedential" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Resedential</Link>
                   <Link href="/remnant?category=Casa Room Size" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Room Size</Link>
                   <Link href="/remnant?category=Casa Commercial" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Casa Commercial</Link>
-                  <Link href="/remnant?category=Pinacal" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pinacal</Link>
+                  <Link href="/remnant?category=Pinnacle" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pinnacle</Link>
                 </div>
               </details>
 
@@ -324,9 +324,9 @@ const Navbar = () => {
                   Decor <ChevronDown size={16} className="transition-transform group-open:rotate-180" />
                 </summary>
                 <div className="flex flex-col space-y-3 mt-3 pl-4 border-l-2 border-gray-100 ml-1">
-                  <Link href="/decor?category=Pouf" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pouf</Link>
-                  <Link href="/decor?category=Pillow" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pillow</Link>
-                  <Link href="/decor?category=Throw" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Throw</Link>
+                  <Link href="/decor?category=Poufs" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Poufs</Link>
+                  <Link href="/decor?category=Pillows" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Pillows</Link>
+                  <Link href="/decor?category=Throws" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Throws</Link>
                 </div>
               </details>
 

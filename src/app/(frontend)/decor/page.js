@@ -38,13 +38,27 @@ const DecorContent = () => {
               console.error("Tag parsing error:", e);
             }
 
-            const decorTags = ["cushion", "pillows", "pouff", "throws"];
-            const isDecor = tags.some(tag => typeof tag === 'string' && decorTags.includes(tag.toLowerCase()) || tag.toLowerCase() === "decor");
+            const decorTags = ["decor", "cushion", "pillows", "pouff", "throws", "pouf", "pillow", "throw"];
+            const isDecor = tags.some(tag => {
+                if(typeof tag === 'string') {
+                    const t = tag.toLowerCase().trim();
+                    return decorTags.includes(t) || t.includes("decor");
+                }
+                return false;
+            });
             
             if (!isDecor) return false;
 
             if (categoryParam) {
-              return tags.some(tag => typeof tag === 'string' && tag.toLowerCase() === categoryParam.toLowerCase());
+              const param = categoryParam.toLowerCase().trim();
+              return tags.some(tag => {
+                if (typeof tag !== 'string') return false;
+                const t = tag.toLowerCase().trim();
+                return t === param || 
+                       t.replace(/s$/, '') === param.replace(/s$/, '') || 
+                       t.replace(/-/g, ' ') === param.replace(/-/g, ' ') ||
+                       (t === 'pouff' && param.startsWith('pouf'));
+              });
             }
 
             return true;
@@ -209,8 +223,7 @@ const DecorContent = () => {
           <div className="container mx-auto text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold mb-4">Shop Our Decor</h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover our handcrafted collection of premium rugs, made with sustainable materials
-              and traditional techniques. Find the perfect piece for your space.
+              Give your home the perfect cozy makeover! Transform your living space instantly with our stylish poufs, soft throws, and comfy pillows.
             </p>
           </div>
         </div>

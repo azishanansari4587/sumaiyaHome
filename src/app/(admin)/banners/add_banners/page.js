@@ -12,6 +12,7 @@ import withAuth from "@/lib/withAuth";
 
 const AddBanner = () => {
   const [image, setImage] = useState(null);
+  const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const router = useRouter();
@@ -61,8 +62,12 @@ const AddBanner = () => {
   // ✅ Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!name.trim()) {
+      toast.error("⚠️ Please enter a banner name");
+      return;
+    }
     if (!image || !image.url) {
-      toast.error("⚠️ Please upload a banner first");
+      toast.error("⚠️ Please upload a banner image");
       return;
     }
 
@@ -73,13 +78,15 @@ const AddBanner = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           imageUrl: image.url,
+          name: name.trim(),
         }),
       });
 
       if (!res.ok) throw new Error("Failed to save banner");
 
       toast.success("✅ Banner saved successfully!");
-      setImage(null); // reset form
+      setImage(null);
+      setName("");
       router.push("/banners");
     } catch (err) {
       console.error(err);
@@ -98,6 +105,20 @@ const AddBanner = () => {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Banner Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Banner Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Summer Sale Banner, Homepage Hero"
+                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
+              />
+            </div>
+
             {/* Upload box */}
             {!image && (
               <div className="border-2 border-dashed border-forest-300 rounded-md p-6 text-center">

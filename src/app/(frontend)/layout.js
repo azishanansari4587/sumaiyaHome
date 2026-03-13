@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import "../globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ShoppingAssistant from "@/components/ShoppingAssistant";
 
 
 export const metadata = {
@@ -45,6 +46,7 @@ export default function RootLayout({ children }) {
         </main>
         <ToastContainer position="top-right" autoClose={3000} theme="light" />
         <Footer />
+        <ShoppingAssistant />
       </body>
     </html>
   );

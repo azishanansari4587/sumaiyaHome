@@ -1,46 +1,6 @@
-// import { Button } from "@/components/ui/button";
-
-// const HeroSection = () => {
-//   return (
-//     <section className="relative h-[90vh] overflow-hidden">
-//       <div 
-//         className="absolute inset-0 bg-cover bg-center bg-no-repeat" 
-//         style={{ backgroundImage: "url('https://images.unsplash.com/photo-1600210492493-0946911123ea?auto=format&fit=crop&q=80')" }}
-//       >
-//         <div className="absolute inset-0 bg-black/30"></div>
-//       </div>
-
-//       <div className="relative container mx-auto h-full flex flex-col justify-center items-start px-4 md:px-8">
-//         <div className="max-w-xl animate-fade-in">
-//           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-semibold text-white mb-4">
-//             Transform Your Space
-//           </h1>
-//           <p className="text-xl text-white/90 mb-8">
-//             Discover our curated collection of handcrafted rugs that blend tradition with modern aesthetics.
-//           </p>
-//           <div className="flex flex-col sm:flex-row gap-4">
-//             <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-//               Rugs Collection
-//             </Button>
-//             {/* <Button size="lg" variant="outline" className="border-white text-black hover:bg-white/20">
-//               Design Consultation
-//             </Button> */}
-//           </div>
-//         </div>
-//       </div>
-//     </section>
-
-
-//     //* Splendid Emporium Carpet *//
-//   );
-// };
-
-// export default HeroSection;
-
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import Autoplay from "embla-carousel-autoplay"
 import {
@@ -52,9 +12,59 @@ import {
 } from "@/components/ui/carousel"
 import Spinner from "./Spinner"
 
+// ── Inline keyframe styles ────────────────────────────────────────────────
+const animStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;600&display=swap');
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(32px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes lineGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+
+  .banner-tagline {
+    font-family: 'Playfair Display', serif;
+    animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) both;
+    animation-delay: 0.15s;
+  }
+  .banner-name {
+    font-family: 'Cormorant Garamond', serif;
+    animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) both;
+    animation-delay: 0.45s;
+    background: linear-gradient(90deg, #fff 0%, #ffe9c6 40%, #fff 60%, #ffe9c6 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeUp 0.9s cubic-bezier(.22,1,.36,1) both 0.45s,
+               shimmer 4s linear 1.5s infinite;
+  }
+  .banner-line {
+    transform-origin: left;
+    animation: lineGrow 0.7s cubic-bezier(.22,1,.36,1) both;
+    animation-delay: 0.75s;
+  }
+  .banner-sub {
+    animation: fadeIn 0.8s ease both;
+    animation-delay: 0.9s;
+  }
+`;
+
 const HeroSection = () => {
   const [slides, setSlides] = useState([])
-  const carouselRef = useRef(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [api, setApi] = useState(null)
   const autoplay = useRef(Autoplay({ delay: 10000, stopOnInteraction: false }))
 
   useEffect(() => {
@@ -70,7 +80,11 @@ const HeroSection = () => {
     fetchBanners()
   }, [])
 
-
+  // Track active slide for text re-animation
+  useEffect(() => {
+    if (!api) return
+    api.on("select", () => setActiveIndex(api.selectedScrollSnap()))
+  }, [api])
 
   if (!slides.length)
     return (
@@ -80,44 +94,107 @@ const HeroSection = () => {
     )
 
   return (
-    <section className="relative h-[60vh] sm:h-[75vh] md:h-screen w-full overflow-hidden bg-gray-50 flex items-center justify-center">
-      <Carousel
-        ref={carouselRef}
-        loop
-        opts={{ loop: true }}
-        plugins={[autoplay.current]}
-        className="w-full h-full relative"
-      >
-        <CarouselContent className="w-full h-full flex -ml-0 mt-0">
-          {slides.map((slide, index) => (
-            <CarouselItem
-              key={index}
-              className="w-full h-full relative pl-0"
-            >
-              <div className="relative w-full h-[60vh] sm:h-[75vh] md:h-screen">
-                <img
-                  src={slide.imageUrl}
-                  alt={`Slide ${index}`}
-                  className="absolute inset-0 w-full h-full object-cover object-center"
-                />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+    <>
+      <style>{animStyles}</style>
+      <section className="relative h-[60vh] sm:h-[75vh] md:h-screen w-full overflow-hidden bg-gray-900">
+        <Carousel
+          setApi={setApi}
+          loop
+          opts={{ loop: true }}
+          plugins={[autoplay.current]}
+          className="w-full h-full"
+        >
+          <CarouselContent className="w-full h-full flex -ml-0 mt-0">
+            {slides.map((slide, index) => (
+              <CarouselItem key={index} className="w-full h-full relative pl-0">
 
-        {/* Navigation Arrows */}
-        <CarouselPrevious className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 bg-white/20 hover:bg-primary text-white flex items-center justify-center rounded-full cursor-pointer shadow-lg transition">
-          <ChevronLeft size={20} className="sm:hidden" />
-          <ChevronLeft size={28} className="hidden sm:block" />
-        </CarouselPrevious>
-        <CarouselNext className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-12 sm:h-12 bg-white/20 hover:bg-primary text-white flex items-center justify-center rounded-full cursor-pointer shadow-lg transition">
-          <ChevronRight size={20} className="sm:hidden" />
-          <ChevronRight size={28} className="hidden sm:block" />
-        </CarouselNext>
-      </Carousel>
-    </section>
+                {/* ── Background image with subtle scale-in ── */}
+                <div
+                  className="relative w-full h-[60vh] sm:h-[75vh] md:h-screen overflow-hidden"
+                >
+                  <img
+                    src={slide.imageUrl}
+                    alt={slide.name || `Slide ${index + 1}`}
+                    className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-[10000ms] ease-out scale-110"
+                    style={index === activeIndex ? { transform: "scale(1)" } : {}}
+                  />
+
+                  {/* ── Gradient overlay ── */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-transparent" />
+
+                  {/* ── Text content ── */}
+                  {index === activeIndex && (
+                    <div className="absolute inset-0 flex flex-col justify-end sm:justify-center px-6 sm:px-12 md:px-20 pb-12 sm:pb-0">
+
+                      {/* Top label */}
+                      <div className="banner-sub mb-3 flex items-center gap-3">
+                        <span className="h-px w-8 bg-amber-300/80" />
+                        <span
+                          style={{ fontFamily: "'Cormorant Garamond', serif", letterSpacing: "0.25em" }}
+                          className="text-amber-200/90 text-xs sm:text-sm font-light uppercase tracking-widest"
+                        >
+                          Sumaiya Home
+                        </span>
+                      </div>
+
+                      {/* Main banner name */}
+                      {slide.name ? (
+                        <h1
+                          className="banner-name text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight mb-3"
+                        >
+                          {slide.name}
+                        </h1>
+                      ) : (
+                        <h1
+                          className="banner-tagline text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-3"
+                        >
+                          Luxury at Every Step
+                        </h1>
+                      )}
+
+                      {/* Animated divider line */}
+                      <div className="banner-line mb-4 h-[2px] w-16 bg-gradient-to-r from-amber-300 to-amber-500 rounded-full" />
+
+                      {/* Sub tagline */}
+                      <p
+                        className="banner-sub text-white/75 text-sm sm:text-base md:text-lg max-w-md font-light"
+                        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                      >
+                        Handcrafted rugs &amp; premium home décor — crafted for spaces that inspire.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+
+          {/* ── Dot indicators ── */}
+          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => api?.scrollTo(i)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === activeIndex ? "w-8 bg-amber-300" : "w-2 bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* ── Navigation Arrows ── */}
+          <CarouselPrevious className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white backdrop-blur-sm flex items-center justify-center rounded-full cursor-pointer shadow-lg transition-all">
+            <ChevronLeft size={22} />
+          </CarouselPrevious>
+          <CarouselNext className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 border border-white/20 text-white backdrop-blur-sm flex items-center justify-center rounded-full cursor-pointer shadow-lg transition-all">
+            <ChevronRight size={22} />
+          </CarouselNext>
+        </Carousel>
+      </section>
+    </>
   )
 }
 
 export default HeroSection
-
