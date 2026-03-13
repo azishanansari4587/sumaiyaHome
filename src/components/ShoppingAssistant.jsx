@@ -144,7 +144,12 @@ export default function ShoppingAssistant() {
         body: JSON.stringify({ messages: [{ role: "user", content: "hello" }] }),
       });
       const data = await res.json();
-      setMessages([{ role: "assistant", reply: data.reply }]);
+      setMessages([{
+        role: "assistant",
+        reply: {
+          text: `👋 **Welcome to Sumaiya Home.**\n\nI'm your personal shopping assistant, Can I help you today?\n\n **Rugs:** Natural, Machine Made, and Novelty styles\n **Accents:** Cozy Poufs, Pillows, and Throws\n **Outdoor:** Weather-resistant Outdoor Rugs\n **Value:** High-quality Remnant Carpets\n\nHow can I help you today? Simply ask:\n*"Show me a 5x7 blue rug"* or *"I'm looking for natural rugs."*`
+        },
+      }]);
     } catch {
       setMessages([{
         role: "assistant",

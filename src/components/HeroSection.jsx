@@ -157,12 +157,12 @@ const HeroSection = () => {
                       <div className="banner-line mb-4 h-[2px] w-16 bg-gradient-to-r from-amber-300 to-amber-500 rounded-full" />
 
                       {/* Sub tagline */}
-                      <p
+                      {/* <p
                         className="banner-sub text-white/75 text-sm sm:text-base md:text-lg max-w-md font-light"
                         style={{ fontFamily: "'Cormorant Garamond', serif" }}
                       >
                         Handcrafted rugs &amp; premium home décor — crafted for spaces that inspire.
-                      </p>
+                      </p> */}
                     </div>
                   )}
                 </div>
