@@ -8,6 +8,7 @@ import { updateCatalogueAction } from "@/actions/catalogue";
 
 const EditCatalogueModal = ({ isOpen, onClose, catalogue, onUpdate }) => {
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
   const [title, setTitle] = useState("");
 
   useEffect(() => {
@@ -19,14 +20,39 @@ const EditCatalogueModal = ({ isOpen, onClose, catalogue, onUpdate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setUploadStatus("Processing...");
 
     const formData = new FormData(e.target);
-    // Add current URLs as fallbacks
-    formData.append("currentImageUrl", catalogue.imageUrl);
-    formData.append("currentPdfUrl", catalogue.pdfUrl);
+    const newImageFile = formData.get("image");
+    const newPdfFile = formData.get("pdf");
+    const updatedTitle = formData.get("title");
 
     try {
-      const result = await updateCatalogueAction(catalogue.id, formData);
+      let imageUrl = catalogue.imageUrl;
+      let pdfUrl = catalogue.pdfUrl;
+
+      // 1. Upload new Image if provided
+      if (newImageFile && newImageFile.size > 0) {
+        setUploadStatus("Uploading new image...");
+        const imageRes = await uploadToCloudinary(newImageFile, "catalogues", "image");
+        imageUrl = imageRes.secure_url;
+      }
+
+      // 2. Upload new PDF if provided
+      if (newPdfFile && newPdfFile.size > 0) {
+        setUploadStatus("Uploading new PDF (may take time for large files)...");
+        const pdfRes = await uploadToCloudinary(newPdfFile, "catalogues", "raw");
+        pdfUrl = pdfRes.secure_url;
+      }
+
+      // 3. Update Database
+      setUploadStatus("Saving changes...");
+      const result = await updateCatalogueAction({ 
+        id: catalogue.id, 
+        title: updatedTitle, 
+        imageUrl, 
+        pdfUrl 
+      });
       
       if (!result.success) throw new Error(result.error);
 
@@ -34,9 +60,11 @@ const EditCatalogueModal = ({ isOpen, onClose, catalogue, onUpdate }) => {
       onUpdate(); // Refresh the list
       onClose();
     } catch (err) {
+      console.error("Update process failed:", err);
       toast.error(err.message || "Update failed");
     } finally {
       setLoading(false);
+      setUploadStatus("");
     }
   };
 
@@ -76,14 +104,21 @@ const EditCatalogueModal = ({ isOpen, onClose, catalogue, onUpdate }) => {
              <p className="text-[10px] text-gray-500 leading-none">Current: {catalogue.pdfUrl.split('/').pop()}</p>
           </div>
 
-          <DialogFooter className="pt-4">
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={loading} className="bg-primary hover:bg-forest-800">
-              {loading ? "Updating..." : "Save Changes"}
-            </Button>
-          </DialogFooter>
+          <div className="flex flex-col gap-4 pt-4">
+            {uploadStatus && (
+              <p className="text-xs text-forest-600 animate-pulse font-medium text-center">
+                {uploadStatus}
+              </p>
+            )}
+            <DialogFooter className="sm:justify-end gap-2">
+              <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={loading} className="bg-primary hover:bg-forest-800">
+                {loading ? "Processing..." : "Save Changes"}
+              </Button>
+            </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

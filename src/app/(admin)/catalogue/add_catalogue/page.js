@@ -5,28 +5,47 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import withAuth from "@/lib/withAuth";
 
-import { uploadCatalogueAction } from "@/actions/catalogue";
+import { saveCatalogueAction } from "@/actions/catalogue";
+import { uploadToCloudinary } from "@/lib/uploadCloudinary";
 
 const  AddCatalogue = () => {
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setUploadStatus("Uploading image...");
 
     const formData = new FormData(e.target);
+    const title = formData.get("title");
+    const imageFile = formData.get("image");
+    const pdfFile = formData.get("pdf");
 
     try {
-      const result = await uploadCatalogueAction(formData);
+      // 1. Upload Image
+      const imageRes = await uploadToCloudinary(imageFile, "catalogues", "image");
+      const imageUrl = imageRes.secure_url;
+      
+      // 2. Upload PDF
+      setUploadStatus("Uploading PDF (this may take a while for large files)...");
+      const pdfRes = await uploadToCloudinary(pdfFile, "catalogues", "raw");
+      const pdfUrl = pdfRes.secure_url;
+
+      // 3. Save to Database
+      setUploadStatus("Saving to database...");
+      const result = await saveCatalogueAction({ title, imageUrl, pdfUrl });
       
       if (!result.success) throw new Error(result.error);
 
       toast.success(result.message || "Catalogue uploaded successfully!");
       e.target.reset();
     } catch (err) {
+      console.error("Upload process failed:", err);
       toast.error(err.message || "Upload failed");
     } finally {
       setLoading(false);
+      setUploadStatus("");
     }
   };
 
@@ -46,8 +65,14 @@ const  AddCatalogue = () => {
           <Input type="file" name="pdf" accept="application/pdf" required />
         </label>
 
+        {uploadStatus && (
+          <p className="text-sm text-forest-600 animate-pulse font-medium">
+            {uploadStatus}
+          </p>
+        )}
+
         <Button type="submit" disabled={loading}>
-          {loading ? "Uploading..." : "Upload Catalogue"}
+          {loading ? "Processing..." : "Upload Catalogue"}
         </Button>
       </form>
     </div>

@@ -1,68 +1,42 @@
 "use server";
 
 import connection from "@/lib/connection";
-import { uploadToCloudinary } from "@/lib/uploadCloudinary";
 import { revalidatePath } from "next/cache";
 
-export async function uploadCatalogueAction(formData) {
+/**
+ * Saves a new catalogue record to the database.
+ * The files (image and PDF) should be uploaded on the client side first.
+ */
+export async function saveCatalogueAction({ title, imageUrl, pdfUrl }) {
   try {
-    console.log("Upload started...");
-    const title = formData.get("title");
-    const image = formData.get("image");
-    const pdf = formData.get("pdf");
-
-    console.log("Title:", title);
-    console.log("Image size:", image?.size);
-    console.log("PDF size:", pdf?.size);
-
-    if (!title || !image || !pdf) {
-      console.log("Missing fields");
-      return { success: false, error: "All fields are required" };
+    if (!title || !imageUrl || !pdfUrl) {
+      return { success: false, error: "Title, Image, and PDF are all required" };
     }
-
-    // ✅ Upload image
-    const imageUpload = await uploadToCloudinary(image, "catalogues", "image");
-
-    // ✅ Upload PDF
-    const pdfUpload = await uploadToCloudinary(pdf, "catalogues", "raw"); // 👈 raw for PDF
 
     // ✅ Insert into DB
     await connection.execute(
       "INSERT INTO catalogues (title, image, pdf) VALUES (?, ?, ?)",
-      [title, imageUpload.secure_url, pdfUpload.secure_url]
+      [title, imageUrl, pdfUrl]
     );
 
     revalidatePath("/(admin)/catalogue");
     revalidatePath("/catalogue");
 
-    return { success: true, message: "Catalogue uploaded successfully" };
+    return { success: true, message: "Catalogue saved successfully" };
   } catch (err) {
-    console.error("Catalogue upload error:", err);
+    console.error("Save Catalogue Error:", err);
     return { success: false, error: "Internal server error" };
   }
 }
 
-export async function updateCatalogueAction(id, formData) {
+/**
+ * Updates an existing catalogue record in the database.
+ * If new files were provided, they should be uploaded on the client side first.
+ */
+export async function updateCatalogueAction({ id, title, imageUrl, pdfUrl }) {
   try {
-    const title = formData.get("title");
-    const image = formData.get("image");
-    const pdf = formData.get("pdf");
-    const currentImageUrl = formData.get("currentImageUrl");
-    const currentPdfUrl = formData.get("currentPdfUrl");
-
-    let imageUrl = currentImageUrl;
-    let pdfUrl = currentPdfUrl;
-
-    // ✅ If new image provided, upload it
-    if (image && image.size > 0) {
-      const imageUpload = await uploadToCloudinary(image, "catalogues", "image");
-      imageUrl = imageUpload.secure_url;
-    }
-
-    // ✅ If new PDF provided, upload it
-    if (pdf && pdf.size > 0) {
-      const pdfUpload = await uploadToCloudinary(pdf, "catalogues", "raw");
-      pdfUrl = pdfUpload.secure_url;
+    if (!id || !title || !imageUrl || !pdfUrl) {
+      return { success: false, error: "Missing required fields" };
     }
 
     // ✅ Update in DB
@@ -76,7 +50,7 @@ export async function updateCatalogueAction(id, formData) {
 
     return { success: true, message: "Catalogue updated successfully" };
   } catch (err) {
-    console.error("Catalogue update error:", err);
+    console.error("Update Catalogue Error:", err);
     return { success: false, error: "Internal server error" };
   }
 }
