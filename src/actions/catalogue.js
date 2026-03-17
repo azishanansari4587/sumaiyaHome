@@ -6,11 +6,17 @@ import { revalidatePath } from "next/cache";
 
 export async function uploadCatalogueAction(formData) {
   try {
+    console.log("Upload started...");
     const title = formData.get("title");
     const image = formData.get("image");
     const pdf = formData.get("pdf");
 
+    console.log("Title:", title);
+    console.log("Image size:", image?.size);
+    console.log("PDF size:", pdf?.size);
+
     if (!title || !image || !pdf) {
+      console.log("Missing fields");
       return { success: false, error: "All fields are required" };
     }
 
