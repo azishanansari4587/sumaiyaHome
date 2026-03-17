@@ -17,7 +17,7 @@ const Footer = () => {
               <a href="#" className="text-gray-500 hover:text-primary transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="text-gray-500 hover:text-primary transition-colors">
+              <a href="https://www.instagram.com/sumaiyarugs/" className="text-gray-500 hover:text-primary transition-colors">
                 <Instagram size={20} />
               </a>
               <a href="#" className="text-gray-500 hover:text-primary transition-colors">
@@ -30,9 +30,9 @@ const Footer = () => {
             <h4 className="font-medium text-lg text-gray-900 mb-4">Shop</h4>
             <ul className="space-y-2 text-gray-600">
               <li><Link href="/rugs" className="hover:text-primary transition-colors">All Rugs</Link></li>
-              <li><Link href="/collections" className="hover:text-primary transition-colors">Collection</Link></li>
               <li><Link href="/remnant" className="hover:text-primary transition-colors">Remnant</Link></li>
               <li><Link href="/decor" className="hover:text-primary transition-colors">Decor</Link></li>
+              <li><Link href="/outdoor" className="hover:text-primary transition-colors">Outdoor</Link></li>
             </ul>
           </div>
 
@@ -40,7 +40,7 @@ const Footer = () => {
             <h4 className="font-medium text-lg text-gray-900 mb-4">Customer Service</h4>
             <ul className="space-y-2 text-gray-600">
               <li><a href="/contact" className="hover:text-primary transition-colors">Contact Us</a></li>
-              <li><a href="/faq" className="hover:text-primary transition-colors">FAQ</a></li>
+              {/* <li><a href="/faq" className="hover:text-primary transition-colors">FAQ</a></li> */}
               <li><a href="/carpetCare" className="hover:text-primary transition-colors">Care Instructions</a></li>
             </ul>
           </div>

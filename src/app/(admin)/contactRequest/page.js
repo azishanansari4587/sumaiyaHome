@@ -39,7 +39,7 @@ const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   // Update status after modal edit
   const handleStatusUpdated = (id, newStatus) => {
-    setContacts(prev =>
+    setMessages(prev =>
       prev.map(c => (c.id === id ? { ...c, status: newStatus } : c))
     );
   };

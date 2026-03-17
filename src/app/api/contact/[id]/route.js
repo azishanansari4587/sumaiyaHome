@@ -3,8 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function PUT(req, { params }) {
   try {
-    const {  } = await params; // route params
-    const { status } = await req.json();
+    const { id } = await params;
+    const body = await req.json();
+    const { name, email, phone, subject, message, status } = body;
 
     // Update query
     const [result] = await connection.query(
@@ -16,25 +17,24 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ error: "Contact Message not found" }, { status: 404 });
     }
 
-    // Get updated row (optional)
+    // Get updated row
     const [rows] = await connection.query("SELECT * FROM contact_messages WHERE id = ?", [id]);
 
     return NextResponse.json(rows[0], { status: 200 });
   } catch (error) {
-    console.error("Error updating rug:", error);
+    console.error("Error updating contact message:", error);
     return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
 }
 
-
 export async function DELETE(req, { params }) {
   try {
-    const {  } = await params;
+    const { id } = await params;
 
     await connection.query(`DELETE FROM contact_messages WHERE id = ?`, [id]);
 
     return NextResponse.json(
-      { success: true, message: "Contact Messages deleted successfully!" },
+      { success: true, message: "Contact Message deleted successfully!" },
       { status: 200 }
     );
   } catch (error) {

@@ -260,7 +260,7 @@ useEffect(() => {
             <DialogDescription className="text-gray-600">
               Are you sure you want to delete{" "}
               <span className="font-medium text-black">
-                {selectedPartner?.name}
+                {selectedPartner?.companyName}
               </span>
               ? This action cannot be undone.
             </DialogDescription>
