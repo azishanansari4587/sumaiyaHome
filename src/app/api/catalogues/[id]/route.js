@@ -1,7 +1,7 @@
 import connection from "@/lib/connection";
 
 export async function DELETE(req, { params }) {
-  const {  } = await params;
+  const { id } = await params;
 
   if (!id) {
     return new Response(JSON.stringify({ error: "Catalogues ID is required" }), {
@@ -10,9 +10,7 @@ export async function DELETE(req, { params }) {
   }
 
   try {
-
-
-    // Delete banner from database
+    // Delete catalogue from database
     const [result] = await connection.execute(
       "DELETE FROM catalogues WHERE id = ?",
       [id]

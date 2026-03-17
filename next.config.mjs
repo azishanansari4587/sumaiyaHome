@@ -2,7 +2,7 @@
 const nextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb', // File upload limit
+      bodySizeLimit: '100mb', // File upload limit
     },
   },
 

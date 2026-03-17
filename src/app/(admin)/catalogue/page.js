@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import withAuth from "@/lib/withAuth";
-import { Book, Plus, Trash2 } from "lucide-react";
+import { Book, Plus, Trash2, Pencil } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -16,15 +16,22 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+import EditCatalogueModal from "@/components/EditCatalogueModal";
+
 const ViewCatalogues = () => {
   const [catalogues, setCatalogues] = useState([]);
   const [catalogueToDelete, setCatalogueToDelete] = useState(null);
+  const [catalogueToEdit, setCatalogueToEdit] = useState(null);
 
-  useEffect(() => {
+  const fetchCatalogues = () => {
     fetch("/api/catalogues")
       .then((res) => res.json())
-      .then((data) => setCatalogues(data.catalogues || [])) // ✅ only array set
+      .then((data) => setCatalogues(data.catalogues || []))
       .catch((err) => console.error("Fetch error:", err));
+  };
+
+  useEffect(() => {
+    fetchCatalogues();
   }, []);
 
 
@@ -81,36 +88,58 @@ const ViewCatalogues = () => {
                   className="w-full  h-full object-cover rounded"
                 />
 
-                {/* Delete Button */}
-                <button
-                  onClick={() => setCatalogueToDelete(c.id)}
-                  className="
-                        absolute top-2 right-2
-                        bg-white/90 hover:bg-white
-                        p-2 rounded-full shadow-md
-                        text-red-600 hover:text-red-700
-                        opacity-0 group-hover:opacity-100
-                        transition-all duration-300 ease-in-out
-                        focus:outline-none focus:ring-2 focus:ring-red-400
-                        "
-                  aria-label="Delete banner"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+                {/* Action Buttons */}
+                <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  {/* Edit Button */}
+                  <button
+                    onClick={() => setCatalogueToEdit(c)}
+                    className="bg-white/90 hover:bg-white p-2 rounded-full shadow-md text-forest-600 hover:text-forest-700 focus:outline-none focus:ring-2 focus:ring-forest-400"
+                    aria-label="Edit catalogue"
+                  >
+                    <Pencil className="h-5 w-5" />
+                  </button>
+                  
+                  {/* Delete Button */}
+                  <button
+                    onClick={() => setCatalogueToDelete(c.id)}
+                    className="bg-white/90 hover:bg-white p-2 rounded-full shadow-md text-red-600 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    aria-label="Delete catalogue"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
               <h2 className="font-semibold mb-2">{c.title}</h2>
-              <Link
-                href={c.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                View PDF
-              </Link>
+              <div className="flex justify-between items-center">
+                <Link
+                  href={c.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline text-sm"
+                >
+                  View PDF
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setCatalogueToEdit(c)}
+                  className="text-forest-600 hover:text-forest-800"
+                >
+                  Edit
+                </Button>
+              </div>
             </div>
           ))}
         </div>
       )}
+
+      {/* Edit Modal */}
+      <EditCatalogueModal 
+        isOpen={!!catalogueToEdit} 
+        onClose={() => setCatalogueToEdit(null)} 
+        catalogue={catalogueToEdit} 
+        onUpdate={fetchCatalogues} 
+      />
 
       {/* shadcn AlertDialog for confirm deletion */}
       <AlertDialog open={!!catalogueToDelete} onOpenChange={(open) => !open && setCatalogueToDelete(null)}>

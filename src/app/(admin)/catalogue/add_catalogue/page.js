@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import withAuth from "@/lib/withAuth";
 
+import { uploadCatalogueAction } from "@/actions/catalogue";
+
 const  AddCatalogue = () => {
   const [loading, setLoading] = useState(false);
 
@@ -15,15 +17,11 @@ const  AddCatalogue = () => {
     const formData = new FormData(e.target);
 
     try {
-      const res = await fetch("/api/catalogues", {
-        method: "POST",
-        body: formData,
-      });
+      const result = await uploadCatalogueAction(formData);
+      
+      if (!result.success) throw new Error(result.error);
 
-      const result = await res.json();
-      if (!res.ok) throw new Error(result.error);
-
-      toast.success("Catalogue uploaded successfully!");
+      toast.success(result.message || "Catalogue uploaded successfully!");
       e.target.reset();
     } catch (err) {
       toast.error(err.message || "Upload failed");
