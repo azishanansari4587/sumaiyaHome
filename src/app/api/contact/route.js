@@ -54,15 +54,3 @@ export async function GET() {
   }
 }
 
-// Put Method
-export async function PUT(req, { params }) {
-  const {  } = await params;
-  const { Status } = await req.json();
-
-  // Update in DB (MySQL example)
-  await connection.execute("UPDATE contact_messages SET Status = ? WHERE id = ?", [Status, id]);
-
-  return new Response(JSON.stringify({ message: "Status updated" }), {
-    status: 200,
-  });
-}

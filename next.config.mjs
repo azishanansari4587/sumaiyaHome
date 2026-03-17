@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverActions: {
-    bodySizeLimit: '100mb', // File upload limit
+    bodySizeLimit: '100MB',
   },
   experimental: {
+    serverActions: {
+      bodySizeLimit: '100MB',
+    },
   },
 
   images: {
