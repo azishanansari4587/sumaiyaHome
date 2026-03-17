@@ -5,7 +5,7 @@ import connection from "@/lib/connection"; // Make sure this connects to your My
 // PUT METHOD
 
 export async function PUT(req, { params }) {
-  const {  } = await params;
+  const { id } = await params;
   const { Status } = await req.json();
 
   // Update in DB (MySQL example)
@@ -18,7 +18,7 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(req, { params }) {
   try {
-    const {  } = await params;
+    const { id } = await params;
 
     await connection.query(`DELETE FROM partner_applications WHERE id = ?`, [id]);
 

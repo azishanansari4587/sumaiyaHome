@@ -95,6 +95,49 @@ export default function PartnerForm({ form, onSubmit, disabled = false }) {
         )}
       />
 
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <FormField
+          control={form.control}
+          name="duns"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Duns#</FormLabel>
+              <FormControl>
+                <Input placeholder="DUNS#" {...field} disabled={disabled} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="buyerName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Buyer Name*</FormLabel>
+              <FormControl>
+                <Input placeholder="Buyer name" {...field} disabled={disabled} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+
+      <FormField
+        control={form.control}
+        name="taxID"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Tax ID / EIN*</FormLabel>
+            <FormControl>
+              <Input placeholder="Tax ID" {...field} disabled={disabled} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
       <FormField
         control={form.control}
         name="message"

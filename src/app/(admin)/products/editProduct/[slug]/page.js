@@ -40,7 +40,6 @@ const EditProduct = () => {
     inStock: true,
     sku: "",
     collectionId: "",
-    short_description: "",
     description: "",
     badges: "",
   };
@@ -315,16 +314,6 @@ const EditProduct = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="short_description">Short Description <span className="text-red-500">*</span></Label>
-                  <Textarea
-                    id="short_description"
-                    name="short_description"
-                    value={product.short_description}
-                    onChange={handleChange}
-                    className="bg-gray-50 border-gray-200 min-h-[80px]"
-                  />
-                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Full Description <span className="text-red-500">*</span></Label>

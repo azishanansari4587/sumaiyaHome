@@ -47,7 +47,6 @@ export async function POST(req) {
     const code = formData.get("code");
     const isActive = formData.get("isActive") === "true";
     const isFeatured = formData.get("isFeatured") === "true";
-    const short_description = formData.get("short_description");
     const description = formData.get("description");
     const inStock = formData.get("inStock") === "true";
     const sku = formData.get("sku");
@@ -94,13 +93,12 @@ export async function POST(req) {
     // Save to DB
     const [result] = await connection.execute(
       `INSERT INTO product 
-      (name, code, slug, short_description, description, isActive, isFeatured, tags,  images, colors, sizes, features, specifications, inStock, sku, badges, collectionId) 
-      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (name, code, slug, description, isActive, isFeatured, tags,  images, colors, sizes, features, specifications, inStock, sku, badges, collectionId) 
+      VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         name,
         code,
         slug,
-        short_description,
         description,
         isActive ? 1 : 0,
         isFeatured ? 1 : 0,
@@ -181,7 +179,7 @@ export async function GET(req) {
         collection c ON p.collectionId = c.id
       ${showAll ? "" : "WHERE p.isActive = 1"}
       ORDER BY 
-        p.id DESC`;
+        p.id ASC`;
 
     const [rows] = await connection.execute(query);
 

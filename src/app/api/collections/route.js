@@ -144,7 +144,7 @@ export async function GET(req) {
       LEFT JOIN product p ON c.id = p.collectionId
       ${showAll ? "" : "WHERE c.isActive = 1"}
       GROUP BY c.id
-      ORDER BY c.created_at DESC`;
+      ORDER BY c.created_at ASC`;
 
     const [collections] = await connection.execute(query);
 

@@ -158,7 +158,7 @@ export async function GET(req, { params }) {
 
     // Step 2: Get products from that collection
     const [productRows] = await connection.query(
-      `SELECT * FROM product WHERE collectionId = ? ORDER BY id DESC`,
+      `SELECT * FROM product WHERE collectionId = ? ORDER BY id ASC`,
       [collection.id]
     );
 

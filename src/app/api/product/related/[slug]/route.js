@@ -39,7 +39,7 @@ export async function GET(req, context) {
       const query = `
         SELECT * FROM product
         WHERE slug != ? AND (${likeConditions} OR collectionId = ?)
-        ORDER BY id DESC
+        ORDER BY id ASC
         LIMIT 6
       `;
 
@@ -48,7 +48,7 @@ export async function GET(req, context) {
     } else {
       // Fallback: If no tags, just use collectionId
       const [rows] = await connection.execute(
-        "SELECT * FROM product WHERE collectionId = ? AND slug != ? ORDER BY id DESC LIMIT 6",
+        "SELECT * FROM product WHERE collectionId = ? AND slug != ? ORDER BY id ASC LIMIT 6",
         [product.collectionId, slug]
       );
       relatedProductRows = rows;

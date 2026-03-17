@@ -15,6 +15,9 @@ export async function POST(req) {
       businessType,
       message,
       termsAccepted,
+      duns,
+      buyerName,
+      taxID,
     } = body;
 
     if (
@@ -24,6 +27,8 @@ export async function POST(req) {
       !phone ||
       !businessType ||
       !message ||
+      !buyerName ||
+      !taxID ||
       !termsAccepted
     ) {
       return NextResponse.json(
@@ -36,8 +41,8 @@ export async function POST(req) {
       `
       INSERT INTO partner_applications (
         companyName, contactName, email, phone, website,
-        businessType, message, termsAccepted
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        businessType, message, termsAccepted, duns, buyerName, taxID
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `,
       [
         companyName,
@@ -48,6 +53,9 @@ export async function POST(req) {
         businessType,
         message,
         termsAccepted ? 1 : 0,
+        duns || null,
+        buyerName,
+        taxID,
       ]
     );
 

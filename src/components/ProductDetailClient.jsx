@@ -304,7 +304,7 @@ export default function ProductDetailClient({ slug }) {
             </div>
 
             <div className="prose prose-sm max-w-none">
-              <p>{product.description}</p>
+              <p className="whitespace-pre-wrap">{product.description}</p>
             </div>
 
             {/* Color */}

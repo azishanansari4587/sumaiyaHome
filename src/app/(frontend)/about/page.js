@@ -36,14 +36,13 @@ const About = () => {
             <div className="order-2 lg:order-1">
               <h2 className="text-3xl font-serif font-bold mb-6">Our Story</h2>
               <p className="text-muted-foreground mb-4">
-                The story of Sumaiya International Inc. began with a dream.
+                At SUMAIYA INTERNATIONAL Inc., we transform spaces with high-quality remnants, rugs, and home décor that perfectly blend style, comfort, and durability. As a trusted supplier, we offer an extensive range of remnant rugs, handmade rugs, decorative poufs, beach mats, pillows, and curated home accessories designed to complement both modern and traditional interiors.
 
-                  Our founder envisioned a brand that would honor India’s rich crafting traditions while redefining luxury for the modern world. Growing up surrounded by textile artisans, he witnessed firsthand the dedication, skill, and passion behind every hand-woven piece. It became his mission to bring this artistry to a global stage.
+                Our story began in India, where my grandfather started a passion-driven business creating beautiful, functional floor coverings. My father continued this legacy, and after completing my college education, I moved to the United States and gained experience with leading retail home furnishing companies. Inspired by this journey, I founded SUMAIYA INTERNATIONAL Inc. in Dalton, Georgia, to bring stylish, reliable, and affordable products to homes and businesses worldwide.
 
-                  With a deep respect for craftsmanship and an eye for modern aesthetics, he established Sumaiya International Inc. — a brand that bridges heritage and contemporary design. What started as a small initiative born from passion has grown into an international name trusted for quality, authenticity, and elegance.
+                We are committed to excellence in every detail—quality craftsmanship, timely delivery, and competitive pricing—so our retail partners and buyers can confidently offer products that delight customers and elevate any space.
 
-                  Today, his vision continues to guide the brand:
-                  to create beautiful, meaningful pieces that turn houses into homes and preserve the legacy of artisans for future generations.
+                With SUMAIYA INTERNATIONAL Inc., you’re not just sourcing décor—you’re partnering with a trusted supplier dedicated to helping your business grow while bringing beauty and comfort to every home.
               </p>
              
             </div>

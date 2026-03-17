@@ -161,7 +161,7 @@ function formatProducts(products) {
     return {
       name: p.name?.trim(),
       slug: p.slug,
-      description: p.short_description || "",
+      description: p.description?.substring(0, 150) + (p.description?.length > 150 ? "..." : "") || "",
       colors: colors.length ? colors : [],
       sizes: sizes.length ? sizes : [],
       material,
@@ -217,7 +217,7 @@ export async function POST(req) {
        FROM product p 
        JOIN collection c ON p.collectionId = c.id 
        WHERE p.isActive = 1 AND p.inStock = 1 
-       ORDER BY p.id DESC`
+       ORDER BY p.id ASC`
     );
 
     const products = rows.map(p => ({

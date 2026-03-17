@@ -49,17 +49,9 @@ const formSchema = z.object({
   businessType: z.string().min(1, {
     message: "Please select your business type.",
   }),
-  duns: z.string().min(3, {
-    message: "Please enter a valid duns number.",
-  }),
+  duns: z.string().optional().or(z.literal("")),
   buyerName: z.string().min(2, {
     message: "Buyer name must be at least 2 characters.",
-  }),
-  buyerEmail: z.string().email({
-    message: "Please enter a valid buyer email address.",
-  }),
-  buyerContact: z.string().min(10, {
-    message: "Please enter a valid buyer contact number.",
   }),
   taxID: z.string().min(10, {
     message: "Please enter a valid tax ID / EIN / Federal tax ID.",
@@ -87,8 +79,6 @@ const Partner = () => {
       message: "",
       duns: "",
       buyerName: "",
-      buyerEmail: "",
-      buyerContact: "",
       taxID: "",
       termsAccepted: false,
     },
@@ -305,36 +295,6 @@ const Partner = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="buyerEmail"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Buyer Email*</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Buyer Email" {...field} required/>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="buyerContact"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Buyer Contact*</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="Buyer Contact" {...field} required/>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                </div>
 
                   <FormField
                     control={form.control}

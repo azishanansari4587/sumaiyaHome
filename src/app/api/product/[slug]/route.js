@@ -65,7 +65,6 @@ export async function PUT(req, { params }) {
         inStock = ?,
         sku = ?,
         collectionId = ?,
-        short_description = ?,
         description = ?,
         badges = ?,
         tags = ?
@@ -84,7 +83,6 @@ export async function PUT(req, { params }) {
         body.inStock ? 1 : 0,
         body.sku || "",
         body.collectionId || "",
-        body.short_description || "",
         body.description || "",
         body.badges || "",
         JSON.stringify(tags),
