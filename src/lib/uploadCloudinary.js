@@ -14,17 +14,25 @@ export async function uploadToCloudinary(file, folder ="SumaiyaHome", resourceTy
 
     const url = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
 
-    const res = await axios.post(url, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    onUploadProgress: (event) => {
-      if (onProgress) {
-        const progress = Math.round((event.loaded * 100) / event.total);
-        onProgress(progress);
-      }
-    },
-  });
-  
-
-     return res.data; // ✅ Cloudinary ka response { secure_url, public_id, ... }
+    console.log(`Uploading to Cloudinary: ${url}`);
+    
+    try {
+      const res = await axios.post(url, formData, {
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        // Remove manual Content-Type to let axios set it with boundary
+        onUploadProgress: (event) => {
+          if (onProgress && event.total) {
+            const progress = Math.round((event.loaded * 100) / event.total);
+            onProgress(progress);
+          }
+        },
+      });
+      console.log("Cloudinary upload successful:", res.data.secure_url);
+      return res.data;
+    } catch (error) {
+      console.error("Cloudinary upload error details:", error.response?.data || error.message);
+      throw error;
+    }
 }
   
