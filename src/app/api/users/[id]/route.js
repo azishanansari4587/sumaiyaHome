@@ -1,6 +1,6 @@
-import connection from "@/lib/connection"; // apna MySQL connection file
+import connection from "@/lib/connection";
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@/lib/verifyToken";
 
 export async function DELETE(req, { params }) {
   try {
@@ -26,18 +26,9 @@ export async function GET(req, { params }) {
     const { id } = await params;
 
     // Auth Check
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const token = authHeader.split(" ")[1];
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 403 });
-    }
+    const auth = verifyToken(req);
+    if (auth.error) return auth.error;
+    const { decoded } = auth;
 
     // Role == 1 can fetch any user, normal users can only fetch themselves
     if (String(decoded.role) !== "1" && String(decoded.id) !== String(id)) {
@@ -71,18 +62,9 @@ export async function PUT(req, { params }) {
     const body = await req.json();
 
     // Ensure the ID is valid and the user is authenticated
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const token = authHeader.split(" ")[1];
-    let decoded;
-    try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 403 });
-    }
+    const auth = verifyToken(req);
+    if (auth.error) return auth.error;
+    const { decoded } = auth;
 
     if (String(decoded.role) !== "1" && String(decoded.id) !== String(id)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });

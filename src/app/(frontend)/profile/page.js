@@ -22,6 +22,12 @@ export default function ProfilePage() {
     });
     const router = useRouter();
 
+    // Auto-logout when token is expired
+    const handleExpiredSession = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        router.push("/signin");
+    };
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -46,6 +52,10 @@ export default function ProfilePage() {
                     }
                 });
 
+                if (res.status === 401 || res.status === 403) {
+                    handleExpiredSession();
+                    return;
+                }
                 if (!res.ok) {
                     throw new Error("Failed to fetch profile");
                 }
@@ -98,6 +108,10 @@ export default function ProfilePage() {
                 body: JSON.stringify(formData)
             });
 
+            if (res.status === 401 || res.status === 403) {
+                handleExpiredSession();
+                return;
+            }
             if (!res.ok) throw new Error("Failed to save profile");
 
             // Refetch Profile after save

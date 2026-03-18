@@ -1,19 +1,13 @@
 
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
 import connection from "@/lib/connection";
-
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
+import { verifyToken } from "@/lib/verifyToken";
 
 export async function POST(req) {
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const auth = verifyToken(req);
+    if (auth.error) return auth.error;
+    const { decoded } = auth;
 
     const body = await req.json();
     const { productId, quantity, color, size, image } = body;
@@ -46,16 +40,10 @@ export async function POST(req) {
 
 export async function GET(req) {
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const auth = verifyToken(req);
+    if (auth.error) return auth.error;
+    const { decoded } = auth;
 
-    const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.id;
-
-    // Join with product table if needed
     const [rows] = await connection.execute(`
       SELECT 
         c.id AS cartId,
@@ -68,7 +56,7 @@ export async function GET(req) {
       FROM cart c
       JOIN product p ON c.productId = p.id
       WHERE c.userId = ?
-    `, [userId]);
+    `, [decoded.id]);
 
     return NextResponse.json({ cartItems: rows });
 
@@ -77,5 +65,3 @@ export async function GET(req) {
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
-
-
