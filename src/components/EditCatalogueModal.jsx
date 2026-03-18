@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "react-toastify";
 import { updateCatalogueAction } from "@/actions/catalogue";
+import { uploadToCloudinary } from "@/lib/uploadCloudinary";
 
 const EditCatalogueModal = ({ isOpen, onClose, catalogue, onUpdate }) => {
   const [loading, setLoading] = useState(false);

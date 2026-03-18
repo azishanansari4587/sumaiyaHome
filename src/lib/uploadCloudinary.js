@@ -3,12 +3,11 @@ import axios from "axios";
 
 export async function uploadToCloudinary(file, folder ="SumaiyaHome", resourceType="image", onProgress) {
 
-    // const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-    const cloudName = "dp5e3rgbl";
-    const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET;
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME || "dp5e3rgbl";
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "NuzratCarpet";
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "NuzratCarpet"); // Cloudinary unsigned preset
+    formData.append("upload_preset", uploadPreset); // Cloudinary unsigned preset
     formData.append("folder", folder);
 
 
