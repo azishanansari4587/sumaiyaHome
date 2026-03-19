@@ -58,7 +58,7 @@ const AddProduct = () => {
 
   const [product, setProduct] = useState(initialProductState);
 
-  const availableTags = ["All Rugs", "Natural", "Machine Made", "Novelty", "Casa Resedential", "Casa Commercial", "Casa Room Size", "Pinnacle", "Tropical", "Beachbum", "New Arrival", "Cushion", "Throws", "Pillows", "Poufs"];
+  const availableTags = ["All Rugs", "Natural", "Machine Made", "Novelty", "Casa Resedential", "Casa Commercial", "Casa Room Size", "Pinnacle", "Tropical", "Beachbum", "New Arrival", "Cushion", "Throws", "Pillows", "Poufs", "Doormats"];
   const availableBadges = [
     { id: "new", name: "New" },
     { id: "top_sell", name: "Top Sell" },

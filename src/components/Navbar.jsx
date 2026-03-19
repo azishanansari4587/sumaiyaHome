@@ -144,6 +144,8 @@ const Navbar = () => {
               </div>
             </div>
 
+            <Link href="/doormats" className="text-foreground hover:text-primary text-gray-600 font-normal">Doormats</Link>
+
             <Link href="/about" className="text-foreground hover:text-primary text-gray-600 font-normal">About Us</Link>
             {/* <Link href="/contact" className="text-foreground hover:text-primary font-medium">Contact</Link>
             <Link href="/customize" className="text-foreground hover:text-primary font-medium">Customize</Link> */}
@@ -339,6 +341,8 @@ const Navbar = () => {
                   <Link href="/outdoor?category=Beachbum" onClick={() => setIsMenuOpen(false)} className="text-sm text-gray-500 hover:text-primary">Beachbum</Link>
                 </div>
               </details>
+
+              <Link href="/doormats" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal pt-1">Doormats</Link>
 
               <Link href="/about" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal pt-1">About Us</Link>
               <Link href="/partner" onClick={() => setIsMenuOpen(false)} className="text-foreground hover:text-primary text-gray-600 font-normal">Open a Trade Account</Link>
