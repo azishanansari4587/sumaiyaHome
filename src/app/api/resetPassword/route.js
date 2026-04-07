@@ -15,23 +15,27 @@ export async function POST(req) {
     }
 
     // Checking if token is valid and not expired
-    const [users] = await connection.execute(
-      "SELECT * FROM users WHERE reset_token = ? AND reset_token_expires > NOW()",
+    const [tokens] = await connection.execute(
+      "SELECT * FROM password_resets WHERE token = ? AND expires_at > NOW()",
       [token]
     );
 
-    if (users.length === 0) {
+    if (tokens.length === 0) {
       return NextResponse.json({ error: "Invalid or expired reset token" }, { status: 400 });
     }
 
-    const user = users[0];
+    const resetRecord = tokens[0];
+    const userId = resetRecord.user_id;
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     // Update password and invalidate the token
     await connection.execute(
-      "UPDATE users SET password = ?, reset_token = NULL, reset_token_expires = NULL WHERE id = ?",
-      [hashedPassword, user.id]
+      "UPDATE users SET password = ? WHERE id = ?",
+      [hashedPassword, userId]
     );
+    
+    // Delete the token
+    await connection.execute("DELETE FROM password_resets WHERE user_id = ?", [userId]);
 
     return NextResponse.json({ message: "Password successfully updated" });
 

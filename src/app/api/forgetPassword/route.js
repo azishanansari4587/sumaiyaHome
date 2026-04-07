@@ -30,9 +30,13 @@ export async function POST(req) {
     const formattedDate = tokenExpire.toISOString().slice(0, 19).replace('T', ' ');
 
     // Step 3: Store token in DB
+    // First, delete any old tokens for this user
+    await connection.execute("DELETE FROM password_resets WHERE user_id = ?", [user.id]);
+    
+    // Insert new token
     await connection.execute(
-      "UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?",
-      [token, formattedDate, user.id]
+      "INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?)",
+      [user.id, token, formattedDate]
     );
 
     // Step 4: Send email with reset link
