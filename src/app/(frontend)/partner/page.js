@@ -4,12 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Info, ArrowRight } from "lucide-react";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 
 import {
   Form,
@@ -355,110 +350,6 @@ const Partner = () => {
             </Form>
           </div>
         </section>
-
-        {/* FAQs */}
-        <section className="py-16 bg-muted">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold mb-4 font-serif">Frequently Asked Questions</h2>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                Find answers to common questions about our partnership program.
-              </p>
-            </div>
-
-            <div className="max-w-3xl mx-auto">
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>What are the minimum order requirements?</AccordionTrigger>
-                  <AccordionContent>
-                    Initial orders typically start at $2,500, with subsequent orders having a $1,000 minimum. Volume discounts are available for larger orders, and we can discuss customized arrangements based on your specific business needs.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-2">
-                  <AccordionTrigger>How long does the approval process take?</AccordionTrigger>
-                  <AccordionContent>
-                    We review all applications within 5-7 business days. Once approved, you&apos;ll receive login credentials to our partner portal where you can access product information, place orders, and track shipments.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-3">
-                  <AccordionTrigger>Is there a fee to become a partner?</AccordionTrigger>
-                  <AccordionContent>
-                    There&apos;s no fee to apply or join our partnership program. We believe in building mutually beneficial relationships without financial barriers to entry.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-4">
-                  <AccordionTrigger>Do you offer dropshipping for partners?</AccordionTrigger>
-                  <AccordionContent>
-                    Yes, we offer dropshipping services for qualified partners. This service includes custom packaging options and can be white-labeled for seamless integration with your brand.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-5">
-                  <AccordionTrigger>What support do partners receive?</AccordionTrigger>
-                  <AccordionContent>
-                    Partners receive dedicated account management, access to marketing materials, product training, sales support, and regular updates on new collections and promotions.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="item-6">
-                  <AccordionTrigger>Can I sell your products online?</AccordionTrigger>
-                  <AccordionContent>
-                    Yes, partners can sell online, but we maintain MAP (Minimum Advertised Price) policies to protect brand value. We also provide digital assets and product descriptions to help you market effectively online.
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-
-        {/* <section className="py-16 container mx-auto px-4">
-
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-4 font-serif">Partner Testimonials</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Hear from our successful partners about their experience working with Rugs & Beyond.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-card p-6 rounded-lg shadow-sm border">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">AD</div>
-                <div className="ml-4">
-                  <h4 className="font-bold">Alex Daniels</h4>
-                  <p className="text-sm text-muted-foreground">Interior Designer</p>
-                </div>
-              </div>
-              <p className="italic">&quot;The quality of rugs and level of service has helped me deliver exceptional value to my clients. The trade program makes sourcing high-quality pieces effortless.&quot;</p>
-            </div>
-
-            <div className="bg-card p-6 rounded-lg shadow-sm border">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">SH</div>
-                <div className="ml-4">
-                  <h4 className="font-bold">Sarah Hughes</h4>
-                  <p className="text-sm text-muted-foreground">Retail Store Owner</p>
-                </div>
-              </div>
-              <p className="italic">&quot;Since becoming a partner 3 years ago, our rug sales have increased by 40%. The exclusive collections and competitive pricing give us an edge in our market.&quot;</p>
-            </div>
-
-            <div className="bg-card p-6 rounded-lg shadow-sm border">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">MT</div>
-                <div className="ml-4">
-                  <h4 className="font-bold">Michael Torres</h4>
-                  <p className="text-sm text-muted-foreground">Online Marketplace</p>
-                </div>
-              </div>
-              <p className="italic">&quot;Their dropshipping service has allowed us to expand our product catalog without inventory concerns. Customer satisfaction with the rugs is consistently high.&quot;</p>
-            </div>
-          </div>
-
-        </section>
-
-        </section> */}
-
 
         {/* Contact CTA */}
         <section className="py-12 bg-primary text-primary-foreground">

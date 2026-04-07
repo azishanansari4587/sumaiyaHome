@@ -46,6 +46,10 @@ const ViewProducts = () => {
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState([]);
 
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   // Delete Dialog State
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
@@ -113,6 +117,18 @@ const ViewProducts = () => {
     const matchesCollection = collectionFilter === "all" || product.collectionId.toString() === collectionFilter;
     return matchesSearch && matchesCollection;
   });
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, collectionFilter]);
+
+  // Pagination Logic
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // Handle Delete
   const confirmDelete = (product) => {
@@ -254,8 +270,8 @@ const ViewProducts = () => {
                   <TableRow>
                     <TableCell colSpan={6} className="h-32 text-center text-gray-500">Loading products...</TableCell>
                   </TableRow>
-                ) : filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                ) : paginatedProducts.length > 0 ? (
+                  paginatedProducts.map((product) => (
                     <TableRow key={product.id} className="group hover:bg-gray-50/50 transition-colors">
                       <TableCell className="pl-6">
                         <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 bg-gray-100 shadow-sm group-hover:scale-105 transition-transform">
@@ -340,14 +356,39 @@ const ViewProducts = () => {
             </Table>
           </div>
 
-          {/* Pagination Footer (Static for now) */}
-          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
+          {/* Pagination Footer */}
+          <div className="flex flex-col sm:flex-row items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50 gap-4">
             <div className="text-xs text-gray-500">
-              Showing <span className="font-medium text-gray-900">{filteredProducts.length}</span> results
+              Showing <span className="font-medium text-gray-900">
+                {filteredProducts.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}
+              </span> to <span className="font-medium text-gray-900">
+                {Math.min(currentPage * itemsPerPage, filteredProducts.length)}
+              </span> of <span className="font-medium text-gray-900">{filteredProducts.length}</span> results
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled className="h-8 text-xs">Previous</Button>
-              <Button variant="outline" size="sm" disabled className="h-8 text-xs">Next</Button>
+            <div className="flex items-center gap-4">
+              <div className="text-xs text-gray-500">
+                Page {currentPage} of {totalPages === 0 ? 1 : totalPages}
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  disabled={currentPage === 1} 
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  className="h-8 text-xs"
+                >
+                  Previous
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  disabled={currentPage === totalPages || totalPages === 0} 
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  className="h-8 text-xs"
+                >
+                  Next
+                </Button>
+              </div>
             </div>
           </div>
         </div>

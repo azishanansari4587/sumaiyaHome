@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(req, { params }) {
   try {
-    const {  } = await params;
+    const { id } = await params;
 
     await connection.query(`DELETE FROM subscriber WHERE id = ?`, [id]);
 

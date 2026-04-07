@@ -1,28 +1,39 @@
-// /app/forgot-password/page.jsx
-
 "use client";
-import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail } from "lucide-react";
+import { Mail, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [msg, setMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    const res = await fetch("/api/forgot-password", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch("/api/forgetPassword", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+      });
 
-    const data = await res.json();
-    setMsg(data.message || data.error);
+      const data = await res.json();
+      
+      if (res.ok) {
+        toast.success(data.message || "Reset link sent to your email!");
+        setEmail("");
+      } else {
+        toast.error(data.error || "Failed to send reset link");
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -30,7 +41,7 @@ export default function ForgotPassword() {
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-serif font-semibold mb-2">Forgot Password</h1>
-          <p className="text-muted-foreground">Sign in to your Rugs & Beyond account</p>
+          <p className="text-muted-foreground">Enter your email and we'll send you a reset link</p>
         </div>
         
         <div className="bg-card border rounded-lg p-6 shadow-sm">
@@ -53,16 +64,11 @@ export default function ForgotPassword() {
               </div>
             </div>
             
-
-            
-
-            
-            <Button type="submit" className="w-full" >
-              Send Reset Link
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Sending..." : "Send Reset Link"}
+              {!isLoading && <ArrowRight className="ml-2 h-4 w-4" />}
             </Button>
           </form>
-          
-
         </div>
       </div>
     </div>
