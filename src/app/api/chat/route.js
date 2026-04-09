@@ -182,7 +182,7 @@ function buildReply(intent, matched, alternatives) {
   if (intent.isTooVague) {
     return {
       type: "clarify",
-      text: `😊 **Zaroor, main aapki help karunga!**\n\nBehtar results ke liye thoda batayein:\n\n🔹 **Category:** Rugs, Poufs, Pillows, Throws, Outdoor, Remnant?\n🔹 **Size:** Jaise 5' x 7', 8' x 10'?\n🔹 **Color:** Blue, Beige, Natural, Multi?\n🔹 **Material:** Jute, Wool, Polypropylene?\n\n*Example: "Mujhe 8x10 beige wool rug chahiye"*`,
+      text: `😊 **Sure, I'd be happy to help you!**\n\nFor better results, please tell me a bit more:\n\n🔹 **Category:** Rugs, Poufs, Pillows, Throws, Outdoor, Remnant?\n🔹 **Size:** Jaise 5' x 7', 8' x 10'?\n🔹 **Color:** Blue, Beige, Natural, Multi?\n🔹 **Material:** Jute, Wool, Polypropylene?\n\n*Example: "I need an 8x10 beige wool rug"*`,
     };
   }
 
