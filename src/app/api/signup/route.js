@@ -39,7 +39,7 @@ export async function POST(req) {
     // Step 4: Send verification email
     const emailAddress = process.env.EMAIL_ADDRESS;
     const emailPassword = process.env.EMAIL_PASSWORD;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const verifyUrl = `${baseUrl}/verify-email?token=${verificationToken}`;
 
     if (emailAddress && emailPassword) {
